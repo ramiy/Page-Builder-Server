@@ -6,9 +6,9 @@ function query() {
         .then(db => db.collection('user').find({}).toArray());
 }
 
-function checkLogin({ nickname }) {
+function checkLogin({ userName }) {
     return mongoService.connect()
-        .then(db => db.collection('user').findOne({ nickname }));
+        .then(db => db.collection('user').findOne({ userName }));
 }
 
 function getById(id) {
@@ -17,9 +17,9 @@ function getById(id) {
         .then(db => db.collection('user').findOne({ _id }));
 }
 
-function addUser({ nickname }) {
-    // TODO: Add user only if nickname is not taken
-    var user = { nickname }
+function addUser({ userName }) {
+    // TODO: Add user only if userName is not taken
+    var user = { userName }
     return mongoService.connect()
         .then(db => db.collection('user').insertOne(user))
         .then(res => {
