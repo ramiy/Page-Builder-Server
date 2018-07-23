@@ -4,14 +4,12 @@ module.exports = (app) => {
 
     // List of sites
     app.get('/site', (req, res) => {
-        console.log('sites list');
         siteService.query(req.query.name)
             .then(sites => res.json(sites));
     })
 
     // Single site
     app.get('/site/:siteId', (req, res) => {
-        console.log('single site');
         const siteId = req.params.siteId;
         siteService.getById(siteId)
             .then(site => res.json(site));
