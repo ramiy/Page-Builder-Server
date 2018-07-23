@@ -1,0 +1,50 @@
+const siteService = require('../services/siteService');
+
+module.exports = (app) => {
+
+    // List of sites
+    app.get('/site', (req, res) => {
+        console.log('sites list');
+        siteService.query(req.query.name)
+            .then(sites => res.json(sites));
+    })
+
+    // Single site
+    app.get('/site/:siteId', (req, res) => {
+        console.log('single site');
+        const siteId = req.params.siteId;
+        siteService.getById(siteId)
+            .then(site => res.json(site));
+    })
+
+    // Delete site
+    app.delete('/site/:siteId', (req, res) => {
+        if (!req.session.loggedinUser || !req.session.loggedinUser.isAdmin) {
+            return res.status(403).send('Access forbidden.');
+        }
+        const siteId = req.params.siteId;
+        siteService.remove(siteId)
+            .then(() => res.end(`Site ${siteId} Deleted.`));
+    })
+
+    // Add site
+    app.post('/site', (req, res) => {
+        if (!req.session.loggedinUser || !req.session.loggedinUser.isAdmin) {
+            return res.status(403).send('Access forbidden.');
+        }
+        const site = req.body;
+        siteService.add(site)
+            .then(site => res.json(site));
+    })
+
+    // Update site
+    app.put('/site/:siteId', (req, res) => {
+        if (!req.session.loggedinUser || !req.session.loggedinUser.isAdmin) {
+            return res.status(403).send('Access forbidden.');
+        }
+        const site = req.body;
+        siteService.update(site)
+            .then(site => res.json(site));
+    })
+
+}
