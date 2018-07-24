@@ -24,13 +24,17 @@ app.use(session({
 // Main page
 app.get('/', (req, res) => res.send('Welcome to Page Builder App.'));
 
-// Site routes
-const addSiteRoutes = require('./routes/siteRoute');
-addSiteRoutes(app);
-
 // User routes
 const addUserRoutes = require('./routes/userRoute');
 addUserRoutes(app);
+
+// Auth routes
+const addAuthRoutes = require('./routes/authRoute');
+addAuthRoutes(app);
+
+// Site routes
+const addSiteRoutes = require('./routes/siteRoute');
+addSiteRoutes(app);
 
 // Listen to port
 const PORT = process.env.PORT || 3000;
