@@ -1,6 +1,7 @@
 const mongoService = require('./mongoService');
 const ObjectId = require('mongodb').ObjectId;
 
+// List of sites
 function query(userId = '') {
     var criteria = {};
     if (userId) criteria.user_id = new ObjectId(userId);
@@ -12,6 +13,7 @@ function query(userId = '') {
         });
 }
 
+// Single site
 function getById(siteId) {
     siteId = new ObjectId(siteId);
     return mongoService.connect()
@@ -21,6 +23,7 @@ function getById(siteId) {
         });
 }
 
+// Remove site
 function remove(siteId) {
     siteId = new ObjectId(siteId);
     return mongoService.connect()
@@ -30,6 +33,7 @@ function remove(siteId) {
         });
 }
 
+// Add site
 function add(site) {
     return mongoService.connect()
         .then(db => {
@@ -42,6 +46,7 @@ function add(site) {
         });
 }
 
+// Update site
 function update(site) {
     site._id = new ObjectId(site._id);
     return mongoService.connect()

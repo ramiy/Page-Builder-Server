@@ -1,22 +1,26 @@
 const mongoService = require('./mongoService');
 const ObjectId = require('mongodb').ObjectId;
 
+// List of users
 function query() {
     return mongoService.connect()
         .then(db => db.collection('user').find({}).toArray());
 }
 
-function checkLogin({ userName }) {
-    return mongoService.connect()
-        .then(db => db.collection('user').findOne({ userName }));
-}
-
+// Single user
 function getById(id) {
     const _id = new ObjectId(id);
     return mongoService.connect()
         .then(db => db.collection('user').findOne({ _id }));
 }
 
+// Check if user logged-in
+function checkLogin({ userName }) {
+    return mongoService.connect()
+        .then(db => db.collection('user').findOne({ userName }));
+}
+
+// Add user
 function addUser({ userName }) {
     return checkLogin({ userName })
         .then(user => {
@@ -32,6 +36,7 @@ function addUser({ userName }) {
         .catch(err => console.log('user already exited'))
 }
 
+// Update user
 function updateUser(updatedUser) {
     const _id = new ObjectId(updatedUser._id);
     return mongoService.connect()
@@ -40,8 +45,8 @@ function updateUser(updatedUser) {
 
 module.exports = {
     query,
-    checkLogin,
     getById,
+    checkLogin,
     addUser,
     updateUser
 }

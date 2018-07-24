@@ -5,12 +5,17 @@ module.exports = (app) => {
     // List of users
     app.get('/user', (req, res) => {
         userService.query()
-            .then(users => res.json(users))
-    })
+            .then(users => {
+                res.json(users);
+            })
+            .catch(err => {
+                console.log('An error accord.');
+            });
+    });
 
-    // Single user 
+    // Single user
     app.get('/user/:userId', (req, res) => {
-        const userId = req.params.userId
+        const userId = req.params.userId;
         return userService.getById(userId)
             .then(users => {
                 res.json(users);
@@ -18,7 +23,7 @@ module.exports = (app) => {
             .catch(err => {
                 console.log('An error accord.');
             });
-    })
+    });
 
     // Set logged-in user
     app.post('/user/setUser', (req, res) => {
@@ -30,6 +35,6 @@ module.exports = (app) => {
             .catch(err => {
                 console.log('Wrong username.')
             });
-    })
+    });
 
 }
