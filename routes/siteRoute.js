@@ -7,11 +7,12 @@ module.exports = (app) => {
         siteService.query()
             .then(sites => res.json(sites));
     });
-    app.get('/site/:userId', (req, res) => {
-        var userId=req.params.userId
-        siteService.query(userId)
-            .then(sites => res.json(sites));
-    });
+
+    // app.get('/site/:userId', (req, res) => {
+    //     var userId=req.params.userId
+    //     siteService.query(userId)
+    //         .then(sites => res.json(sites));
+    // });
 
     // Single site
     app.get('/site/:siteId', (req, res) => {
