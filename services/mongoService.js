@@ -11,7 +11,7 @@ function connectToMongo() {
 
 	const url = 'mongodb://page_builder_user:page_builder43@ds145921.mlab.com:45921/page_builder';
 
-	return MongoClient.connect(url)
+	return MongoClient.connect(url, { useNewUrlParser: true })
 		.then(client => {
 			console.log('MongoDB Connected.');
 

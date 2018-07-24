@@ -18,19 +18,30 @@ function getById(id) {
 }
 
 function addUser({ userName }) {
-    // TODO: Add user only if userName is not taken
-    var user = { userName }
+    return checkLogin({ userName })
+        .then(user => {
+            if (user) return null;
+            var user = { userName };
+            return mongoService.connect()
+                .then(db => db.collection('user').insertOne(user))
+                .then(res => {
+                    user._id = res.insertedId;
+                    return user;
+                });
+        })
+        .catch(err => console.log('user already exited'))
+}
+
+function updateUser(updatedUser) {
+    const _id = new ObjectId(updatedUser._id);
     return mongoService.connect()
-        .then(db => db.collection('user').insertOne(user))
-        .then(res => {
-            user._id = res.insertedId;
-            return user;
-        });
+        .then(db => db.collection('user').update({ "_id":_id }, { $set: updatedUser }))
 }
 
 module.exports = {
     query,
     checkLogin,
     getById,
-    addUser
+    addUser,
+    updateUser
 }
