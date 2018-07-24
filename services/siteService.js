@@ -1,9 +1,9 @@
 const mongoService = require('./mongoService');
 const ObjectId = require('mongodb').ObjectId;
 
-function query(name = '') {
+function query(userId = '') {
     var criteria = {};
-    if (name) criteria.name = { $regex: `.*${name}.*` };
+    if (userId) criteria.user_id = new ObjectId(userId);
 
     return mongoService.connect()
         .then(db => {
