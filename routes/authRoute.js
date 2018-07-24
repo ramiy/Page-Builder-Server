@@ -4,8 +4,10 @@ module.exports = (app) => {
 
     // Login
     app.put('/login', (req, res) => {
-        const username = req.body.username
-        userService.checkLogin({ username })
+        const userName = req.body.userName
+        console.log('authRoute', userName);
+        
+        userService.checkLogin({ userName })
             .then(user => {
                 req.session.user = user
                 res.json(user)
@@ -14,7 +16,7 @@ module.exports = (app) => {
 
     // Register new user
     app.post('/singup', (req, res) => {
-        const username = req.body.username
+        const username = req.body.user
         userService.addUser({ username })
             .then(user => res.json(user));
     })
