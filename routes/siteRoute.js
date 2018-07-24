@@ -4,7 +4,12 @@ module.exports = (app) => {
 
     // List of sites
     app.get('/site', (req, res) => {
-        siteService.query(req.query.name)
+        siteService.query()
+            .then(sites => res.json(sites));
+    });
+    app.get('/site/:userId', (req, res) => {
+        var userId=req.params.userId
+        siteService.query(userId)
             .then(sites => res.json(sites));
     });
 

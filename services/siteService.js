@@ -3,6 +3,7 @@ const ObjectId = require('mongodb').ObjectId;
 
 // List of sites
 function query(userId = '') {
+    console.log('userId is in query',userId)
     var criteria = {};
     if (userId) criteria.user_id = new ObjectId(userId);
 
