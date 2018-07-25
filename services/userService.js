@@ -28,6 +28,7 @@ function checkLogin(userName, password) {
 
 // Add user
 function addUser({ user }) {
+    user.isAdmin = false;
     return mongoService.connect()
         .then(db => db.collection('user').insertOne(user));
 }
