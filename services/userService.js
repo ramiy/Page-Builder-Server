@@ -7,11 +7,17 @@ function query() {
         .then(db => db.collection('user').find({}).toArray());
 }
 
-// Single user
+// Single user by ID
 function getById(id) {
     const _id = new ObjectId(id);
     return mongoService.connect()
         .then(db => db.collection('user').findOne({ _id }));
+}
+
+// Single user by username
+function getByUserName(userName) {
+    return mongoService.connect()
+        .then(db => db.collection('user').findOne({ userName }));
 }
 
 // Check if user logged-in
@@ -46,6 +52,7 @@ function updateUser(updatedUser) {
 module.exports = {
     query,
     getById,
+    getByUserName,
     checkLogin,
     addUser,
     updateUser

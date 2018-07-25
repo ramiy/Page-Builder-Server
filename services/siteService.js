@@ -5,17 +5,29 @@ const ObjectId = require('mongodb').ObjectId;
 function query(filterBy) {
 
     console.log('filterBy:', filterBy);
-
     var criteria = {};
-    if (filterBy.userId) criteria.user_id = new ObjectId(filterBy.userId);
-    if (filterBy.siteName) criteria.name = { $regex: `.*${filterBy.siteName}.*` };
+    if (filterBy.user_id && filterBy.name){
+        console.log('got 2 params')
+        criteria = {$and:[]};
+        criteria.$and.push({user_id:new ObjectId(filterBy.user_id)});
+        criteria.$and.push({ name:{$regex: `.*${filterBy.name}.*` }});
+    } 
+    else{
+        if (filterBy.user_id || filterBy.name){
+            console.log('got 1 param')
+            if (filterBy.name)criteria.name={$regex: `.*${filterBy.name}.*` };
+            if (filterBy.user_id)criteria.user_id=new ObjectId(filterBy.user_id);
+        }
+        else return Promise.reject()
+    }
 
+    
     console.log('criteria:', criteria);
 
     return mongoService.connect()
         .then(db => {
             const collection = db.collection('site');
-            return collection.find(criteria).toArray();
+            return collection.find(criteria).toArray(); 
         });
 }
 
@@ -26,6 +38,43 @@ function getById(siteId) {
         .then(db => {
             const collection = db.collection('site');
             return collection.findOne({ _id: siteId });
+        });
+}
+
+// Sites by user name
+function getByUserName(userName) {
+    return mongoService.connect()
+        .then(db => {
+            const collection = db.collection('site');
+            return collection.aggregate([
+                {
+                    $match: {_id : _id}
+                },
+                {
+                    $lookup:
+                    {
+                        from: 'user',
+                        localField: 'userId',
+                        foreignField: '_id',
+                        as: 'user'
+                    }
+                },
+                {
+                    $unwind: '$user'
+                },
+                {
+                    $lookup:
+                    {
+                        from: 'site',
+                        localField: 'siteId',
+                        foreignField: '_id',
+                        as: 'site'
+                    }
+                },
+                {
+                    $unwind: '$site'
+                }
+            ]).toArray()
         });
 }
 
@@ -70,5 +119,6 @@ module.exports = {
     getById,
     remove,
     add,
-    update
+    update,
+    getByUserName
 }
