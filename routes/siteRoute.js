@@ -4,7 +4,12 @@ module.exports = (app) => {
 
     // List of sites
     app.get('/site', (req, res) => {
-        siteService.query()
+        console.log('URL Query:', req.query);
+        const filterBy = {
+            siteName: req.query.name,
+            user_id: req.query.user_id
+        };
+        siteService.query(filterBy)
             .then(sites => res.json(sites));
     });
 

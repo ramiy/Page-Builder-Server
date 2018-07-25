@@ -2,10 +2,15 @@ const mongoService = require('./mongoService');
 const ObjectId = require('mongodb').ObjectId;
 
 // List of sites
-function query(userId = '') {
-    console.log('userId is in query',userId)
+function query(filterBy) {
+
+    console.log('filterBy:', filterBy);
+
     var criteria = {};
-    if (userId) criteria.user_id = new ObjectId(userId);
+    if (filterBy.userId) criteria.user_id = new ObjectId(filterBy.userId);
+    if (filterBy.siteName) criteria.name = { $regex: `.*${filterBy.siteName}.*` };
+
+    console.log('criteria:', criteria);
 
     return mongoService.connect()
         .then(db => {
