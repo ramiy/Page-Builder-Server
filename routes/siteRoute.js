@@ -5,12 +5,8 @@ module.exports = (app) => {
 
     // List of sites
     app.get('/site', (req, res) => {
-        console.log('URL Query:', req.query);
         const filterBy = { user_id: req.query.user_id };
-        console.log('req.query.user_id', req.query.user_id)
-        console.log('req.query.name', req.query.name)
         if (req.query.name !== 'undefined') filterBy.name = req.query.name
-        console.log('site route backend filterBy'.filterBy)
 
         siteService.query(filterBy)
             .then(sites => res.json(sites));
@@ -19,17 +15,12 @@ module.exports = (app) => {
     // Sites By userName
     app.get('/site/user/:userName', (req, res) => {
         const userName = req.params.userName;
-        console.log('username !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', userName)
         return userService.getByUserName(userName)
             .then(user => {
                 var filterBy = { name: '', user_id: user._id };
-                console.log('filterBy!!!!!!!!!!!!!!!!!!!!!?????????????', filterBy)
 
                 return siteService.query(filterBy)
-                    .then(sites => {
-                        console.log('we got sites!:', sites)
-                        return res.json(sites)
-                    });
+                    .then(sites => res.json(sites));
             })
     });
 

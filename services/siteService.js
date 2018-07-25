@@ -3,31 +3,24 @@ const ObjectId = require('mongodb').ObjectId;
 
 // List of sites
 function query(filterBy) {
-
-    console.log('filterBy:', filterBy);
     var criteria = {};
-    if (filterBy.user_id && filterBy.name){
-        console.log('got 2 params')
-        criteria = {$and:[]};
-        criteria.$and.push({user_id:new ObjectId(filterBy.user_id)});
-        criteria.$and.push({ name:{$regex: `.*${filterBy.name}.*` }});
-    } 
-    else{
-        if (filterBy.user_id || filterBy.name){
-            console.log('got 1 param')
-            if (filterBy.name)criteria.name={$regex: `.*${filterBy.name}.*` };
-            if (filterBy.user_id)criteria.user_id=new ObjectId(filterBy.user_id);
+    if (filterBy.user_id && filterBy.name) {
+        criteria = { $and: [] };
+        criteria.$and.push({ user_id: new ObjectId(filterBy.user_id) });
+        criteria.$and.push({ name: { $regex: `.*${filterBy.name}.*` } });
+    }
+    else {
+        if (filterBy.user_id || filterBy.name) {
+            if (filterBy.name) criteria.name = { $regex: `.*${filterBy.name}.*` };
+            if (filterBy.user_id) criteria.user_id = new ObjectId(filterBy.user_id);
         }
         else return Promise.reject()
     }
 
-    
-    console.log('criteria:', criteria);
-
     return mongoService.connect()
         .then(db => {
             const collection = db.collection('site');
-            return collection.find(criteria).toArray(); 
+            return collection.find(criteria).toArray();
         });
 }
 
@@ -48,7 +41,7 @@ function getByUserName(userName) {
             const collection = db.collection('site');
             return collection.aggregate([
                 {
-                    $match: {_id : _id}
+                    $match: { _id: _id }
                 },
                 {
                     $lookup:
