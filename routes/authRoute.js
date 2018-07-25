@@ -15,8 +15,6 @@ module.exports = (app) => {
 
     //logout
     app.post('/logout', (req, res) => {
-        console.log('server log out');
-
         req.session.user = null
         res.json({ msg: 'logout' })
     });
