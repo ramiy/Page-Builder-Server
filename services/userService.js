@@ -21,32 +21,45 @@ function getByUserName(userName) {
 }
 
 // Check if user logged-in
-function checkLogin({ userName }) {
+function checkLogin({ userName }, { password }) {
     return mongoService.connect()
-        .then(db => db.collection('user').findOne({ userName }));
+        .then(db => db.collection('user').findOne({ userName, password }));
 }
 
 // Add user
-function addUser({ userName }) {
-    return checkLogin({ userName })
-        .then(user => {
-            if (user) return null;
-            var user = { userName };
-            return mongoService.connect()
-                .then(db => db.collection('user').insertOne(user))
-                .then(res => {
-                    user._id = res.insertedId;
-                    return user;
-                });
-        })
-        .catch(err => console.log('user already exited'))
+function addUser({ user }) {
+    return mongoService.connect()
+        .then(db => db.collection('user').insertOne(user))
+        // .then (({insertedId: _id}) => ({...review, _id}))
+        .then()
+
 }
+
+// makor
+// // Add user
+// function addUser({ userName }) {
+//     return checkLogin({ userName })
+//         .then(user => {
+//             if (user) return null;
+//             var user = { userName };
+//             return mongoService.connect()
+//                 .then(db => db.collection('user').insertOne(user))
+//                 .then(res => {
+//                     user._id = res.insertedId;
+//                     return user;
+//                 });
+//         })
+//         .catch(err => console.log('user already exited'))
+// }
+
+
+
 
 // Update user
 function updateUser(updatedUser) {
     const _id = new ObjectId(updatedUser._id);
     return mongoService.connect()
-        .then(db => db.collection('user').update({ "_id":_id }, { $set: updatedUser }))
+        .then(db => db.collection('user').update({ "_id": _id }, { $set: updatedUser }))
 }
 
 module.exports = {

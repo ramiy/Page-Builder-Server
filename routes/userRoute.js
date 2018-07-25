@@ -25,13 +25,10 @@ module.exports = (app) => {
             });
     });
 
-    // Set logged-in user
-    app.post('/user/setUser', (req, res) => {
-        userService.checkLogin(req.body)
-            .then(user => {
-                req.session.loggedinUser = user;
-                res.json(user);
-            })
+    // Add user
+    app.post('/user', (req, res) => {
+        userService.addUser(req.body)
+            .then()
             .catch(err => {
                 console.log('Wrong username.')
             });
