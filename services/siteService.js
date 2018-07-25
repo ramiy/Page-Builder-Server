@@ -14,7 +14,7 @@ function query(filterBy) {
             if (filterBy.name) criteria.name = { $regex: `.*${filterBy.name}.*` };
             if (filterBy.user_id) criteria.user_id = new ObjectId(filterBy.user_id);
         }
-        else return Promise.reject()
+        // else return Promise.reject()
     }
 
     return mongoService.connect()
