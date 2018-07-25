@@ -15,9 +15,9 @@ function getById(id) {
 }
 
 // Check if user logged-in
-function checkLogin({ userName }) {
+function checkLogin({ userName }, { password }) {
     return mongoService.connect()
-        .then(db => db.collection('user').findOne({ userName }));
+        .then(db => db.collection('user').findOne({ userName, password }));
 }
 
 // Add user
@@ -40,7 +40,7 @@ function addUser({ userName }) {
 function updateUser(updatedUser) {
     const _id = new ObjectId(updatedUser._id);
     return mongoService.connect()
-        .then(db => db.collection('user').update({ "_id":_id }, { $set: updatedUser }))
+        .then(db => db.collection('user').update({ "_id": _id }, { $set: updatedUser }))
 }
 
 module.exports = {
