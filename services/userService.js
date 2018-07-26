@@ -2,9 +2,23 @@ const mongoService = require('./mongoService');
 const ObjectId = require('mongodb').ObjectId;
 
 // List of users
-function query() {
+function query(filterBy) {
+    var criteria = {};
+
+    // Two parameters
+    if (filterBy.id && filterBy.name) {
+        criteria = { $and: [] };
+        criteria.$and.push({ _id: new ObjectId(filterBy.id) });
+        criteria.$and.push({ userName: { $regex: `.*${filterBy.name}.*` } });
+    }
+    // One parameter
+    else if (filterBy.id || filterBy.name) {
+        if (filterBy.id) criteria._id = new ObjectId(filterBy.id);
+        if (filterBy.name) criteria.userName = { $regex: `.*${filterBy.name}.*` };
+    }
+    
     return mongoService.connect()
-        .then(db => db.collection('user').find({}).toArray());
+        .then(db => db.collection('user').find(criteria).toArray());
 }
 
 // Single user by ID

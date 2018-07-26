@@ -4,30 +4,20 @@ module.exports = (app) => {
 
     // List of users
     app.get('/user', (req, res) => {
-        userService.query()
+        const filterBy = {};
+        if (req.query.id !== 'undefined') filterBy.id = req.query.id;
+        if (req.query.name !== 'undefined') filterBy.name = req.query.name;
+
+        userService.query(filterBy)
             .then(users => {
                 res.json(users);
             })
-            .catch(err => {
-                console.log('An error accord.');
-            });
-    });
-
-    // Update user
-
-    app.put('/:userId', (req, res) => {
-     
-        const user = req.body;
-        console.log(user,'bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy');
-        
-        userService.updateUser(user)
-            .then(user => res.json(user))
             .catch(err => {
                 console.log('An error accord.', err);
             });
     });
 
-    // Single user
+    // Single user by ID
     app.get('/user/:userId', (req, res) => {
         const userId = req.params.userId;
         return userService.getById(userId)
@@ -35,17 +25,27 @@ module.exports = (app) => {
                 res.json(users);
             })
             .catch(err => {
-                console.log('An error accord.');
+                console.log('An error accord.', err);
             });
     });
 
     // Add user
     app.post('/user', (req, res) => {
-        userService.addUser(req.body)
+        const user = req.body;
+        userService.addUser(user)
             .then(user=>  res.json(user))
             .catch(err => {
-                console.log('Wrong username.')
+                console.log('An error accord while creating new user.', err)
             });
     });
 
+    // Update user
+    app.put('/user/:userId', (req, res) => {
+        const user = req.body;
+        userService.updateUser(user)
+            .then(user => res.json(user))
+            .catch(err => {
+                console.log('An error accord while saving user data.', err);
+            });
+    });
 }
