@@ -18,28 +18,21 @@ function query(filterBy) {
     }
 
     return mongoService.connect()
-        .then(db => {
-            const collection = db.collection('site');
-            return collection.find(criteria).toArray();
-        });
+        .then(db => db.collection('site').find(criteria).toArray());
 }
 
 // Single site
 function getById(siteId) {
     siteId = new ObjectId(siteId);
     return mongoService.connect()
-        .then(db => {
-            const collection = db.collection('site');
-            return collection.findOne({ _id: siteId });
-        });
+        .then(db => db.collection('site').findOne({ _id: siteId }));
 }
 
 // Sites by user name
 function getByUserName(userName) {
     return mongoService.connect()
         .then(db => {
-            const collection = db.collection('site');
-            return collection.aggregate([
+            return db.collection('site').aggregate([
                 {
                     $match: { _id: _id }
                 },
@@ -75,18 +68,14 @@ function getByUserName(userName) {
 function remove(siteId) {
     siteId = new ObjectId(siteId);
     return mongoService.connect()
-        .then(db => {
-            const collection = db.collection('site');
-            return collection.remove({ _id: siteId });
-        });
+        .then(db => db.collection('site').remove({ _id: siteId }));
 }
 
 // Add site
 function add(site) {
     return mongoService.connect()
         .then(db => {
-            const collection = db.collection('site');
-            return collection.insertOne(site)
+            return colldb.collection('site').insertOne(site)
                 .then(res => {
                     site._id = res.insertedId;
                     return site;
@@ -99,11 +88,8 @@ function update(site) {
     site._id = new ObjectId(site._id);
     return mongoService.connect()
         .then(db => {
-            const collection = db.collection('site');
-            return collection.updateOne({ _id: site._id }, { $set: site })
-                .then(res => {
-                    return site;
-                });
+            return db.collection('site').updateOne({ _id: site._id }, { $set: site })
+                .then(res => site);
         });
 }
 
