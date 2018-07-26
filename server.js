@@ -24,13 +24,13 @@ app.use(session({
 // Main page
 app.get('/', (req, res) => res.send('Welcome to Page Builder App.'));
 
-// User routes
-const addUserRoutes = require('./routes/userRoute');
-addUserRoutes(app);
-
 // Auth routes
 const addAuthRoutes = require('./routes/authRoute');
 addAuthRoutes(app);
+
+// User routes
+const addUserRoutes = require('./routes/userRoute');
+addUserRoutes(app);
 
 // Site routes
 const addSiteRoutes = require('./routes/siteRoute');

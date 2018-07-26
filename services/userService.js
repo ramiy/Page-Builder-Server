@@ -35,10 +35,16 @@ function addUser({ user }) {
 
 // Update user
 function updateUser(updatedUser) {
-    const _id = new ObjectId(updatedUser._id);
+    updatedUser._id = new ObjectId(updatedUser._id);
     return mongoService.connect()
-        .then(db => db.collection('user').update({ '_id': _id }, { $set: updatedUser }))
+        .then(db => db.collection('user').updateOne({ _id: updatedUser._id }, { $set: updatedUser }))
 }
+
+
+
+
+
+
 
 module.exports = {
     query,
