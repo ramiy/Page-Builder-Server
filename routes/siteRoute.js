@@ -5,7 +5,8 @@ module.exports = (app) => {
 
     // List of sites
     app.get('/site', (req, res) => {
-        const filterBy = { user_id: req.query.user_id };
+        const filterBy = {};
+        if (req.query.user_id !== 'undefined') filterBy.user_id = req.query.user_id;
         if (req.query.name !== 'undefined') filterBy.name = req.query.name;
 
         siteService.query(filterBy)

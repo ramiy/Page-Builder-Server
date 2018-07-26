@@ -4,17 +4,17 @@ const ObjectId = require('mongodb').ObjectId;
 // List of sites
 function query(filterBy) {
     var criteria = {};
+
+    // Two parameters
     if (filterBy.user_id && filterBy.name) {
         criteria = { $and: [] };
         criteria.$and.push({ user_id: new ObjectId(filterBy.user_id) });
         criteria.$and.push({ name: { $regex: `.*${filterBy.name}.*` } });
     }
-    else {
-        if (filterBy.user_id || filterBy.name) {
-            if (filterBy.name) criteria.name = { $regex: `.*${filterBy.name}.*` };
-            if (filterBy.user_id) criteria.user_id = new ObjectId(filterBy.user_id);
-        }
-        // else return Promise.reject()
+    // One parameter
+    else if (filterBy.user_id || filterBy.name) {
+        if (filterBy.user_id) criteria.user_id = new ObjectId(filterBy.user_id);
+        if (filterBy.name) criteria.name = { $regex: `.*${filterBy.name}.*` };
     }
 
     return mongoService.connect()
