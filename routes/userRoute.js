@@ -4,7 +4,11 @@ module.exports = (app) => {
 
     // List of users
     app.get('/user', (req, res) => {
-        userService.query()
+        const filterBy = {};
+        if (req.query.id !== 'undefined') filterBy.id = req.query.id;
+        if (req.query.name !== 'undefined') filterBy.name = req.query.name;
+
+        userService.query(filterBy)
             .then(users => {
                 res.json(users);
             })
@@ -13,7 +17,7 @@ module.exports = (app) => {
             });
     });
 
-    // Single user
+    // Single user by ID
     app.get('/user/:userId', (req, res) => {
         const userId = req.params.userId;
         return userService.getById(userId)
