@@ -8,15 +8,16 @@ module.exports = (app) => {
         const password = req.body.password;
         userService.checkLogin(userName, password)
             .then(user => {
-                req.session.user = user
-                res.json(user)
-            });
+                req.session.user = user;
+                res.json(user);
+            })
+            .catch(err => console.log('An error accord in the login process.', err));
     });
 
     // Logout
     app.post('/logout', (req, res) => {
-        req.session.user = null
-        res.json({ msg: 'logout' })
+        req.session.user = null;
+        res.json({ msg: 'logout' });
     });
 
 }

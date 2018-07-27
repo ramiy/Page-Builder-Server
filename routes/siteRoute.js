@@ -21,7 +21,7 @@ module.exports = (app) => {
                 var filterBy = { name: '', user_id: user._id };
                 return siteService.query(filterBy)
                     .then(sites => res.json(sites));
-            })
+            });
     });
 
     // Single site

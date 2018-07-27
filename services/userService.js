@@ -1,84 +1,6 @@
 const mongoService = require('./mongoService');
 const ObjectId = require('mongodb').ObjectId;
 
-// List of users
-function query(filterBy) {
-    var criteria = {};
-
-    // Two parameters
-    if (filterBy.id && filterBy.name) {
-        criteria = { $and: [] };
-        criteria.$and.push({ _id: new ObjectId(filterBy.id) });
-        criteria.$and.push({ userName: { $regex: `.*${filterBy.name}.*` } });
-    }
-    // One parameter
-    else if (filterBy.id || filterBy.name) {
-        if (filterBy.id) criteria._id = new ObjectId(filterBy.id);
-        if (filterBy.name) criteria.userName = { $regex: `.*${filterBy.name}.*` };
-    }
-
-    return mongoService.connect()
-        .then(db => db.collection('user').find(criteria).toArray());
-}
-
-// Single user by ID
-function getById(id) {
-    const _id = new ObjectId(id);
-    return mongoService.connect()
-        .then(db => db.collection('user').findOne({ _id }));
-}
-
-// Single user by username
-function getByUserName(userName) {
-    return mongoService.connect()
-        .then(db => db.collection('user').findOne({ userName }));
-}
-
-// Check if user logged-in
-function checkLogin(userName, password) {
-    return mongoService.connect()
-        .then(db => db.collection('user').findOne({ userName, password }));
-}
-
-
-// Add user
-function addUser({ user }) {
-    let userName = user.userName;
-    // Check whether the name is in the system
-    return getByUserName(userName)
-        .then(data => {
-            if (data) return null;
-
-            user.isAdmin = false;
-            return mongoService.connect()
-                .then(db => db.collection('user').insertOne(user))
-                .catch(err => console.log('no mongo', err)
-                )
-        })
-}
-
-// Update user
-function updateUser(updatedUser) {
-    let userName = updatedUser.userName;
-    // Check whether the name is in the system
-    return getByUserName(userName)
-        .then(user => {
-            if (user && user._id.toString() !== updatedUser._id) return null;
-
-            updatedUser._id = new ObjectId(updatedUser._id);
-            return mongoService.connect()
-                .then(db => db.collection('user').updateOne({ _id: updatedUser._id }, { $set: updatedUser }))
-                .catch(err => console.log('no mongo', err)
-                )
-        })
-
-
-
-}
-
-
-
-
 module.exports = {
     query,
     getById,
@@ -86,4 +8,81 @@ module.exports = {
     checkLogin,
     addUser,
     updateUser
+}
+
+// List of users
+function query(filterBy) {
+    var criteria = {};
+
+    // Several filters
+    if (filterBy.id && filterBy.name) {
+        criteria = { $and: [] };
+        criteria.$and.push({ _id: new ObjectId(filterBy.id) });
+        criteria.$and.push({ userName: { $regex: `.*${filterBy.name}.*` } });
+    }
+    // One filter
+    else if (filterBy.id || filterBy.name) {
+        if (filterBy.id) criteria._id = new ObjectId(filterBy.id);
+        if (filterBy.name) criteria.userName = { $regex: `.*${filterBy.name}.*` };
+    }
+
+    return mongoService.connect()
+        .then(db => db.collection('user').find(criteria).toArray())
+        .catch(err => console.log('Mongodb error.', err));
+}
+
+// Single user by ID
+function getById(id) {
+    const _id = new ObjectId(id);
+    return mongoService.connect()
+        .then(db => db.collection('user').findOne({ _id }))
+        .catch(err => console.log('Mongodb error.', err));
+}
+
+// Single user by username
+function getByUserName(userName) {
+    return mongoService.connect()
+        .then(db => db.collection('user').findOne({ userName }))
+        .catch(err => console.log('Mongodb error.', err));
+}
+
+// Check if user logged-in
+function checkLogin(userName, password) {
+    return mongoService.connect()
+        .then(db => db.collection('user').findOne({ userName, password }))
+        .catch(err => console.log('Mongodb error.', err));
+}
+
+// Add user
+function addUser({ user }) {
+    // Check whether the user already exist
+    let userName = user.userName;
+    return getByUserName(userName)
+        .then(data => {
+            // Bail if user exist
+            if (data) return null;
+
+            // Otherwise add new user
+            user.isAdmin = false;
+            return mongoService.connect()
+                .then(db => db.collection('user').insertOne(user))
+                .catch(err => console.log('Mongodb error.', err));
+        });
+}
+
+// Update user
+function updateUser(updatedUser) {
+    // Check whether the user already exist
+    let userName = updatedUser.userName;
+    return getByUserName(userName)
+        .then(user => {
+            // Bail if user exist
+            if (user && user._id.toString() !== updatedUser._id) return null;
+
+            // Otherwise add new user
+            updatedUser._id = new ObjectId(updatedUser._id);
+            return mongoService.connect()
+                .then(db => db.collection('user').updateOne({ _id: updatedUser._id }, { $set: updatedUser }))
+                .catch(err => console.log('Mongodb error.', err));
+        });
 }

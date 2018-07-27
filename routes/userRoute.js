@@ -9,34 +9,24 @@ module.exports = (app) => {
         if (req.query.name !== 'undefined') filterBy.name = req.query.name;
 
         userService.query(filterBy)
-            .then(users => {
-                res.json(users);
-            })
-            .catch(err => {
-                console.log('An error accord.', err);
-            });
+            .then(users => res.json(users))
+            .catch(err => console.log('An error accord while querying users.', err));
     });
 
     // Single user by ID
     app.get('/user/:userId', (req, res) => {
         const userId = req.params.userId;
         return userService.getById(userId)
-            .then(users => {
-                res.json(users);
-            })
-            .catch(err => {
-                console.log('An error accord.', err);
-            });
+            .then(user => res.json(user))
+            .catch(err => console.log('An error accord while querying user data.', err));
     });
 
     // Add user
     app.post('/user', (req, res) => {
         const user = req.body;
         userService.addUser(user)
-            .then(user=>  res.json(user))
-            .catch(err => {
-                console.log('An error accord while creating new user.', err)
-            });
+            .then(user => res.json(user))
+            .catch(err => console.log('An error accord while creating new user.', err));
     });
 
     // Update user
@@ -44,8 +34,7 @@ module.exports = (app) => {
         const user = req.body;
         userService.updateUser(user)
             .then(user => res.json(user))
-            .catch(err => {
-                console.log('An error accord while saving user data.', err);
-            });
+            .catch(err => console.log('An error accord while saving user data.', err));
     });
+
 }
