@@ -81,8 +81,14 @@ function getByUserName(userName) {
 function remove(siteId) {
     siteId = new ObjectId(siteId);
     return mongoService.connect()
-        .then(db => db.collection('site').remove({ _id: siteId }))
-        .catch(err => console.log('Mongodb error.', err));
+        .then(db => {
+            return db.collection('site').remove({ _id: siteId })
+                .then(() => true)
+        })
+        .catch(err => {
+            console.log('Mongodb error.', err)
+            return false
+        });
 }
 
 // Add site

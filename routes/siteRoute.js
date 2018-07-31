@@ -33,12 +33,18 @@ module.exports = (app) => {
 
     // Delete site
     app.delete('/site/:siteId', (req, res) => {
-        if (!req.session.loggedinUser || !req.session.loggedinUser.isAdmin) {
-            return res.status(403).send('Access forbidden.');
-        }
         const siteId = req.params.siteId;
-        siteService.remove(siteId)
-            .then(() => res.end(`Site ${siteId} Deleted.`));
+        return siteService.remove(siteId)
+            .then((isDelete) =>{
+                if(isDelete){
+                    res.status(200)
+                    res.end(`Site ${siteId} Deleted.`);
+                }
+                else {
+                    res.status(404)
+                    res.end(`Cant deleted sites`);
+                }
+            })
     });
 
     // Add site
