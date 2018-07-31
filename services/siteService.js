@@ -109,8 +109,11 @@ function update(site) {
     site._id = new ObjectId(site._id);
     return mongoService.connect()
         .then(db => {
-            return db.collection('site').updateOne({ _id: site._id }, { $set: site })
-                .then(res => site);
+            return db.collection('site').update({ _id: site._id }, { $set: site }, { upsert: true })
+                .then(() => true);
         })
-        .catch(err => console.log('Mongodb error.', err));
+        .catch(err => {
+            console.log('Mongodb error.', err)
+            return false
+        })
 }

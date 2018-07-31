@@ -35,8 +35,8 @@ module.exports = (app) => {
     app.delete('/site/:siteId', (req, res) => {
         const siteId = req.params.siteId;
         return siteService.remove(siteId)
-            .then((isDelete) =>{
-                if(isDelete){
+            .then((isDelete) => {
+                if (isDelete) {
                     res.status(200)
                     res.end(`Site ${siteId} Deleted.`);
                 }
@@ -49,22 +49,25 @@ module.exports = (app) => {
 
     // Add site
     app.post('/site', (req, res) => {
-        if (!req.session.loggedinUser || !req.session.loggedinUser.isAdmin) {
-            return res.status(403).send('Access forbidden.');
-        }
         const site = req.body;
         siteService.add(site)
-            .then(site => res.json(site));
+        .then(site => res.json(site));
     });
 
     // Update site
     app.put('/site/:siteId', (req, res) => {
-        if (!req.session.loggedinUser || !req.session.loggedinUser.isAdmin) {
-            return res.status(403).send('Access forbidden.');
-        }
         const site = req.body;
         siteService.update(site)
-            .then(site => res.json(site));
+            .then((isUpdate) => {
+                if (isUpdate) {
+                    res.status(200)
+                    res.end(`Site ${site._id} has been Updated.`);
+                }
+                else {
+                    res.status(404)
+                    res.end(`Cant update site`);
+                }
+            })
     });
 
 }
