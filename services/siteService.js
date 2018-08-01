@@ -107,6 +107,7 @@ function add(site) {
 // Update site
 function update(site) {
     site._id = new ObjectId(site._id);
+    site.user_id= new ObjectId(site.user_id)
     return mongoService.connect()
         .then(db => {
             return db.collection('site').update({ _id: site._id }, { $set: site }, { upsert: true })
