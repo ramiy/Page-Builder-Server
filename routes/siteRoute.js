@@ -70,4 +70,22 @@ module.exports = (app) => {
             })
     });
 
+    // Create site
+    app.post('/site/:siteId', (req, res) => {
+        const site = req.body;
+        siteService.create(site)
+            .then((site) => {
+                if (site) {
+                    console.log('got new site:',site)
+                    res.status(200)
+                    res.json(site)
+                    res.end(`New Site has been Created! his id is: ${site._id}.`);
+                }
+                else {
+                    res.status(404)
+                    res.end(`Cant Create site`);
+                }
+            })
+    });
+
 }

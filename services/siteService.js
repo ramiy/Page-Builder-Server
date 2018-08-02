@@ -6,7 +6,7 @@ module.exports = {
     getById,
     getByUserName,
     remove,
-    add,
+    create,
     update
 }
 
@@ -91,11 +91,12 @@ function remove(siteId) {
         });
 }
 
-// Add site
-function add(site) {
+// create site
+function create(site) {
+    site.user_id = new ObjectId(site.user_id);
     return mongoService.connect()
         .then(db => {
-            return colldb.collection('site').insertOne(site)
+            return db.collection('site').insertOne(site)
                 .then(res => {
                     site._id = res.insertedId;
                     return site;
