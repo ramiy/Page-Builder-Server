@@ -21,9 +21,6 @@ app.use(session({
     }
 }));
 
-// Main page
-app.get('/', (req, res) => res.send('Welcome to Page Builder App.'));
-
 // Auth routes
 const addAuthRoutes = require('./routes/authRoute');
 addAuthRoutes(app);
