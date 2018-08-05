@@ -35,14 +35,14 @@ module.exports = (app) => {
     app.delete('/site/:siteId', (req, res) => {
         const siteId = req.params.siteId;
         return siteService.remove(siteId)
-            .then((isDelete) => {
+            .then(isDelete => {
                 if (isDelete) {
                     res.status(200)
                     res.end(`Site ${siteId} Deleted.`);
                 }
                 else {
                     res.status(404)
-                    res.end(`Cant deleted sites`);
+                    res.end('Can\'t delete site.');
                 }
             })
     });
@@ -51,21 +51,21 @@ module.exports = (app) => {
     app.post('/site', (req, res) => {
         const site = req.body;
         siteService.add(site)
-        .then(site => res.json(site));
+            .then(site => res.json(site));
     });
 
     // Update site
     app.put('/site/:siteId', (req, res) => {
         const site = req.body;
         siteService.update(site)
-            .then((isUpdate) => {
+            .then(isUpdate => {
                 if (isUpdate) {
                     res.status(200)
                     res.end(`Site ${site._id} has been Updated.`);
                 }
                 else {
                     res.status(404)
-                    res.end(`Cant update site`);
+                    res.end('Can\'t update site.');
                 }
             })
     });
@@ -74,16 +74,15 @@ module.exports = (app) => {
     app.post('/site/:siteId', (req, res) => {
         const site = req.body;
         siteService.create(site)
-            .then((site) => {
+            .then(site => {
                 if (site) {
-                    console.log('got new site:',site)
                     res.status(200)
                     res.json(site)
                     res.end(`New Site has been Created! his id is: ${site._id}.`);
                 }
                 else {
                     res.status(404)
-                    res.end(`Cant Create site`);
+                    res.end('Can\'t create new site.');
                 }
             })
     });
