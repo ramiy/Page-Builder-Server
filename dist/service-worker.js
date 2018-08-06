@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.4.1/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.3300919457dd0ced44b977a7c5b24508.js"
+  "/precache-manifest.3a7e69913754ed1418f547524c6cd412.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "page-builder"});
