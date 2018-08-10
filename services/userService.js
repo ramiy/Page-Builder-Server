@@ -11,7 +11,7 @@ module.exports = {
 }
 
 // List of users
-function query(filterBy) {
+function query(filterBy = {}) {
     var criteria = {};
 
     // Several filters
@@ -54,20 +54,21 @@ function checkLogin(userName, password) {
 }
 
 // Add user
-function addUser({ user }) {
+function addUser(user) {
     // Check whether the user already exist
-    let userName = user.userName;
-    return getByUserName(userName)
-        .then(data => {
-            // Bail if user exist
-            if (data) return null;
-
-            // Otherwise add new user
+    return query()
+        .then(users => {
+            var isFound = users.find(currUser => {
+                return currUser.userName.toLowerCase() === user.userName.toLowerCase()
+            })
+            if(isFound) return null;
+            // // Otherwise add new user
+            
             user.isAdmin = false;
             return mongoService.connect()
                 .then(db => db.collection('user').insertOne(user))
                 .catch(err => console.log('Mongodb error.', err));
-        });
+        })
 }
 
 // Update user

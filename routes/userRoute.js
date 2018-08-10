@@ -23,8 +23,8 @@ module.exports = (app) => {
 
     // Add user
     app.post('/user', (req, res) => {
-        const user = req.body;
-        userService.addUser(user)
+        const userData = req.body;
+        userService.addUser(userData.user)
             .then(user => res.json(user))
             .catch(err => console.log('An error accord while creating new user.', err));
     });
