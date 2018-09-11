@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const history = require('connect-history-api-fallback');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
@@ -9,6 +10,7 @@ app.use(cors({
     origin: ['http://localhost:8080'],
     credentials: true // enable set cookie
 }));
+app.use(history());
 app.use(bodyParser.json());
 app.use(express.static('dist'));
 app.use(cookieParser());
